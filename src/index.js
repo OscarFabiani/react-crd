@@ -15,8 +15,8 @@ class Tracker extends React.Component {
       },
     ]
   }
-  handleDelete = (name) => {
-    const people = this.state.people.filter(p => p.name !== name)
+  handleDelete = (index) => {
+    const people = this.state.people.filter((p, i) => i !== index)
     this.setState ({
       people: people
     })
@@ -84,10 +84,11 @@ class AddForm extends React.Component {
 class Persons extends React.Component {
   render() {
     const people = this.props.people;
-    const peopleRenders = people.map(peep => {
+    const peopleRenders = people.map((peep, i) => {
       return (
       <Person
-        key={peep.name}
+        key={peep.name + i}
+        index={i}
         name={peep.name}
         relationship={peep.relationship}
         handleDelete={this.props.handleDelete}/>
@@ -112,7 +113,7 @@ class Persons extends React.Component {
 
 class Person extends React.Component {
   handleClick = () => {
-    this.props.handleDelete(this.props.name);
+    this.props.handleDelete(this.props.index);
   }
   render() {
     return (
