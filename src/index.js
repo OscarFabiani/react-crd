@@ -16,9 +16,8 @@ class Tracker extends React.Component {
     ]
   }
   handleDelete = (index) => {
-    const people = this.state.people.filter((p, i) => i !== index)
-    this.setState ({
-      people: people
+    this.setState (prevState => {
+      return {people: prevState.people.filter((_, i) => i !== index)}
     })
   }
   handleSubmit = (name, relationship) => {
@@ -40,40 +39,36 @@ class Tracker extends React.Component {
 }
 
 class AddForm extends React.Component {
-  state = {
-    name: '',
-    relationship: '',
+  constructor(props) {
+    super(props);
+    this.input1 = React.createRef();
+    this.input2 = React.createRef();
   }
-  handleNameChange = (event) => {
+  handleChange = (event) => {
     this.setState ({
-      name: event.target.value
-    })
-  }
-  handleRelationshipChange = (event) => {
-    this.setState ({
-      relationship: event.target.value
+      [event.target.name]: event.target.value,
     })
   }
   handleSubmit = (event) => {
-    if (this.state.name && this.state.relationship) {
-      this.props.handleSubmit(this.state.name, this.state.relationship);
-      this.setState ({
-        name: '',
-        relationship: '',
-      })
+    const name = this.input1.current;
+    const relationship = this.input2.current;
+    if(name.value && relationship.value) {
+      this.props.handleSubmit(name.value, relationship.value);
+      name.value = '';
+      relationship.value = '';
     }
     event.preventDefault();
   }
   render() {
     return (
       <form className='margin-bottom' onSubmit={this.handleSubmit}>
-        <fieldset>
+        <fieldset name='test'>
           <legend>Name</legend>
-          <input type='text' name='name' value={this.state.name} onChange={this.handleNameChange}></input>
+          <input type='text' name='name' ref={this.input1} onChange={this.handleChange}></input>
         </fieldset>
         <fieldset>
           <legend>Relationship</legend>
-          <input type='text' name='relationship' value={this.state.relationship} onChange={this.handleRelationshipChange}></input>
+          <input type='text' name='relationship' ref={this.input2} onChange={this.handleChange}></input>
         </fieldset>
         <input type='submit' value='Submit'></input>
       </form>
@@ -91,7 +86,7 @@ class Persons extends React.Component {
         index={i}
         name={peep.name}
         relationship={peep.relationship}
-        handleDelete={this.props.handleDelete}/>
+        handleDelete={() => this.props.handleDelete(i)}/>
       )
     })
     return (
@@ -116,11 +111,12 @@ class Person extends React.Component {
     this.props.handleDelete(this.props.index);
   }
   render() {
+    console.log(this.props.name + ' just rendered')
     return (
       <tr>
         <td>{this.props.name}</td>
         <td>{this.props.relationship}</td>
-        <td><button onClick={this.handleClick}>Delete</button></td>
+        <td><button onClick={this.props.handleDelete}>Delete</button></td>
       </tr>
     )
   }
@@ -133,5 +129,13 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
+//CONTINUE COMPARING AND REFINING: I most recently converted the AddForm compopnent from a controlled
+//component using state to an uncontrolled component using refs to access the value of the input
+//fields from the DOM. This seems to necessitate using a constructor to initialize the refs. I could have
+//(hypothetically) instead removed the fieldset and legend tags and accessed the inputs using
+//event.target[0].value. This would have removed semantic html in favor of a more concise component (no
+//constructor or state). Maybe there is a way to further refine this component. Maybe there is a way for
+//event.target to access child elements...
 
-//POSSIBLE ADDITIONS: ADD ERRORS FOR EMPTY FIELDS, DONT ALLOW DUPLICATE NAMES
+//POSSIBLE ADDITIONS: STOP EACH PERSON COMPONNET FROM RERENDERING, ADD ERRORS FOR EMPTY FIELDS, DONT ALLOW
+//DUPLICATE NAMES
