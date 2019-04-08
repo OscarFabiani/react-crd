@@ -106,18 +106,20 @@ const Persons = props => {
   )
 }
 
-const Person = props => {
-  const handleClick = () => {
-    props.handleDelete(props.index);
+class Person extends React.PureComponent {
+  handleClick = () => {
+    this.props.handleDelete(this.props.index);
   }
-    console.log(props.name + ' just rendered')
+  render () {
+    console.log(this.props.name + ' just rendered')
     return (
       <tr>
-        <td>{props.name}</td>
-        <td>{props.relationship}</td>
-        <td><button onClick={handleClick}>Delete</button></td>
+        <td>{this.props.name}</td>
+        <td>{this.props.relationship}</td>
+        <td><button onClick={this.handleClick}>Delete</button></td>
       </tr>
     )
+  }
 }
 
 
