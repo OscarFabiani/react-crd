@@ -56,40 +56,42 @@ class Tracker extends React.Component {
   }
 }
 
-const AddForm = props => {
-  const handleSubmit = (event) => {
+class AddForm extends React.PureComponent {
+  handleSubmit = (event) => {
     event.preventDefault();
-    if (props.nameVal && props.relationshipVal) {
-      props.handleSubmit(props.nameVal, props.relationshipVal);
+    if (this.props.nameVal && this.props.relationshipVal) {
+      this.props.handleSubmit(this.props.nameVal, this.props.relationshipVal);
     }
   }
-  return (
-    <form className='margin-bottom' onSubmit={handleSubmit}>
-      <fieldset>
-        <legend><h2 className={'margin-bottom'}>Add New Person</h2></legend>
-        <legend>Name</legend>
-        <input type='text' name='name' value={props.nameVal} onChange={props.updateInput}></input>
-        <legend>Relationship</legend>
-        <input className={'margin-bottom'} type='text' name='relationship' value={props.relationshipVal} onChange={props.updateInput}></input>
-        <input className='display-block' type='submit' value='Submit'></input>
-      </fieldset>
-    </form>
-  )
+  render() {
+    return (
+      <form className='margin-bottom' onSubmit={this.handleSubmit}>
+        <fieldset>
+          <legend><h2 className={'margin-bottom'}>Add New Person</h2></legend>
+          <legend>Name</legend>
+          <input type='text' name='name' value={this.props.nameVal} onChange={this.props.updateInput}></input>
+          <legend>Relationship</legend>
+          <input className={'margin-bottom'} type='text' name='relationship' value={this.props.relationshipVal} onChange={this.props.updateInput}></input>
+          <input className='display-block' type='submit' value='Submit'></input>
+        </fieldset>
+      </form>
+    )
+  }
 }
 
-const Persons = props => {
-  const people = props.people;
-  const peopleRenders = people.map((peep, i) => {
-    return (
-    <Person
-      key={peep.name + i}
-      index={i}
-      name={peep.name}
-      relationship={peep.relationship}
-      handleDelete={props.handleDelete}/>
-    )
-  })
-  
+class Persons extends React.PureComponent {
+  render() {
+    const people = this.props.people;
+    const peopleRenders = people.map((p, i) => {
+      return (
+      <Person
+        key={p.name + i}
+        index={i}
+        name={p.name}
+        relationship={p.relationship}
+        handleDelete={this.props.handleDelete}/>
+      )
+    })
   return (
     <table>
       <thead>
@@ -104,6 +106,7 @@ const Persons = props => {
       </tbody>
     </table>
   )
+  }
 }
 
 class Person extends React.PureComponent {
