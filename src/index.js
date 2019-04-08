@@ -38,42 +38,68 @@ class Tracker extends React.Component {
   }
 }
 
+/*
 class AddForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.input1 = React.createRef();
-    this.input2 = React.createRef();
-  }
-  handleChange = (event) => {
-    this.setState ({
-      [event.target.name]: event.target.value,
-    })
+  //This method is to avoid setting refs as inline methods as they are updated twice seemingly on each change.
+  //Using this, it seems that this is only called once.
+  setRef = (input) => {
+    input.name === 'name' ? this.input1 = input : this.input2 = input;
   }
   handleSubmit = (event) => {
-    const name = this.input1.current;
-    const relationship = this.input2.current;
-    if(name.value && relationship.value) {
+    event.preventDefault();
+    const name = this.input1;
+    const relationship = this.input2;
+    if (name.value && relationship.value) {
       this.props.handleSubmit(name.value, relationship.value);
       name.value = '';
       relationship.value = '';
     }
-    event.preventDefault();
   }
   render() {
     return (
       <form className='margin-bottom' onSubmit={this.handleSubmit}>
         <fieldset name='test'>
           <legend>Name</legend>
-          <input type='text' name='name' ref={this.input1} onChange={this.handleChange}></input>
+          <input type='text' name='name' ref={this.setRef}></input>
         </fieldset>
         <fieldset>
           <legend>Relationship</legend>
-          <input type='text' name='relationship' ref={this.input2} onChange={this.handleChange}></input>
+          <input type='text' name='relationship' ref={this.setRef}></input>
         </fieldset>
         <input type='submit' value='Submit'></input>
       </form>
     )
   }
+}
+*/
+
+const AddForm = (props) => {
+  let input1 = React.createRef();
+  let input2 = React.createRef();
+  
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const name = input1.current;
+    const relationship = input2.current;
+    if (name.value && relationship.value) {
+      props.handleSubmit(name.value, relationship.value);
+      name.value = '';
+      relationship.value = '';
+    }
+  }
+    return (
+      <form className='margin-bottom' onSubmit={handleSubmit}>
+        <fieldset name='test'>
+          <legend>Name</legend>
+          <input type='text' name='name' ref={input1}></input>
+        </fieldset>
+        <fieldset>
+          <legend>Relationship</legend>
+          <input type='text' name='relationship' ref={input2}></input>
+        </fieldset>
+        <input type='submit' value='Submit'></input>
+      </form>
+    )
 }
 
 class Persons extends React.Component {
@@ -131,11 +157,19 @@ ReactDOM.render(
 
 //CONTINUE COMPARING AND REFINING: I most recently converted the AddForm compopnent from a controlled
 //component using state to an uncontrolled component using refs to access the value of the input
-//fields from the DOM. This seems to necessitate using a constructor to initialize the refs. I could have
-//(hypothetically) instead removed the fieldset and legend tags and accessed the inputs using
-//event.target[0].value. This would have removed semantic html in favor of a more concise component (no
-//constructor or state). Maybe there is a way to further refine this component. Maybe there is a way for
-//event.target to access child elements...
+//fields from the DOM. This seems to necessitate using a constructor to initialize the refs using
+//React.createRef(). I could have (hypothetically) instead removed the fieldset and legend tags and accessed
+//the inputs using event.target[0].value. This would have removed semantic html in favor of a more concise
+//component (no constructor or state). Maybe there is a way to further refine this component. Maybe there is
+//a way for event.target to access child elements...
+
+//After some research I foudn two other methods for adding refs. One was uning an inline function to create the
+//ref this eliminating the need to use React.createRef() (and thus eliminating the need for a constructor), and
+//the other methods was to use a method to set the ref which avoided the inline ref function updating often. I
+//then converted the AddForm component to a functional component and found that the setRef method wasn't working
+//as it did when the component was a class component so I instead reverted to using React.createRef() instead
+//of a setRef method.
 
 //POSSIBLE ADDITIONS: STOP EACH PERSON COMPONNET FROM RERENDERING, ADD ERRORS FOR EMPTY FIELDS, DONT ALLOW
 //DUPLICATE NAMES
+
