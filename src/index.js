@@ -73,7 +73,7 @@ class AddForm extends React.Component {
 }
 */
 
-const AddForm = (props) => {
+const AddForm = props => {
   let input1 = React.createRef();
   let input2 = React.createRef();
   
@@ -102,51 +102,50 @@ const AddForm = (props) => {
     )
 }
 
-class Persons extends React.Component {
-  render() {
-    const people = this.props.people;
-    const peopleRenders = people.map((peep, i) => {
-      return (
-      <Person
-        key={peep.name + i}
-        index={i}
-        name={peep.name}
-        relationship={peep.relationship}
-        handleDelete={() => this.props.handleDelete(i)}/>
-      )
-    })
+const Persons = props => {
+  const people = props.people;
+  const peopleRenders = people.map((peep, i) => {
     return (
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Relationship</th>
-            <th>Remove</th>
-          </tr>
-        </thead>
-        <tbody>
-          {peopleRenders}
-        </tbody>
-      </table>
+    <Person
+      key={peep.name + i}
+      index={i}
+      name={peep.name}
+      relationship={peep.relationship}
+      handleDelete={() => props.handleDelete(i)}/>
     )
-  }
+  })
+  
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Relationship</th>
+          <th>Remove</th>
+        </tr>
+      </thead>
+      <tbody>
+        {peopleRenders}
+      </tbody>
+    </table>
+  )
 }
 
-class Person extends React.Component {
-  handleClick = () => {
+const Person = props => {
+  //WHY ISN'T THIS BEING USED YET?
+  const handleClick = () => {
     this.props.handleDelete(this.props.index);
   }
-  render() {
-    console.log(this.props.name + ' just rendered')
+    console.log(props.name + ' just rendered')
     return (
       <tr>
-        <td>{this.props.name}</td>
-        <td>{this.props.relationship}</td>
-        <td><button onClick={this.props.handleDelete}>Delete</button></td>
+        <td>{props.name}</td>
+        <td>{props.relationship}</td>
+        <td><button onClick={props.handleDelete}>Delete</button></td>
       </tr>
     )
-  }
 }
+
 
 
 
@@ -168,7 +167,7 @@ ReactDOM.render(
 //the other methods was to use a method to set the ref which avoided the inline ref function updating often. I
 //then converted the AddForm component to a functional component and found that the setRef method wasn't working
 //as it did when the component was a class component so I instead reverted to using React.createRef() instead
-//of a setRef method.
+//of a setRef method. Maybe a class component would be best in this case. If so, why?
 
 //POSSIBLE ADDITIONS: STOP EACH PERSON COMPONNET FROM RERENDERING, ADD ERRORS FOR EMPTY FIELDS, DONT ALLOW
 //DUPLICATE NAMES
