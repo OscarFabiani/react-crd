@@ -1,11 +1,16 @@
 html {
   font-family: 'Courier New', Courier, monospace;
 }
-body, h1, h2, h3, p, button {
+body, h1, h2, h3, p, button, fieldset {
   margin: 0;
   padding: 0;
+  border: none;
 }
 
 .margin-bottom {
   margin-bottom: 20px;
+}
+
+.display-block {
+  display: block;
 }

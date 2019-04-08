@@ -29,7 +29,6 @@ class Tracker extends React.Component {
     return (
       <div>
         <h1 className='margin-bottom'>Person Tracker</h1>
-        <h2 className={'margin-bottom'}>Add New Person</h2>
         <AddForm handleSubmit={this.handleSubmit}/>
         <h2 className={'margin-bottom'}>Persons:</h2>
         <Persons people={this.state.people} handleDelete={this.handleDelete}/>
@@ -89,15 +88,14 @@ const AddForm = props => {
   }
     return (
       <form className='margin-bottom' onSubmit={handleSubmit}>
-        <fieldset name='test'>
+        <fieldset>
+          <legend><h2 className={'margin-bottom'}>Add New Person</h2></legend>
           <legend>Name</legend>
           <input type='text' name='name' ref={input1}></input>
-        </fieldset>
-        <fieldset>
           <legend>Relationship</legend>
-          <input type='text' name='relationship' ref={input2}></input>
+          <input className={'margin-bottom'} type='text' name='relationship' ref={input2}></input>
+          <input className='display-block' type='submit' value='Submit'></input>
         </fieldset>
-        <input type='submit' value='Submit'></input>
       </form>
     )
 }
@@ -162,9 +160,9 @@ ReactDOM.render(
 //component (no constructor or state). Maybe there is a way to further refine this component. Maybe there is
 //a way for event.target to access child elements...
 
-//After some research I foudn two other methods for adding refs. One was uning an inline function to create the
-//ref this eliminating the need to use React.createRef() (and thus eliminating the need for a constructor), and
-//the other methods was to use a method to set the ref which avoided the inline ref function updating often. I
+//After some research I found two other methods for adding refs. One was using an inline function to create the
+//ref thus eliminating the need to use React.createRef() (and thus eliminating the need for a constructor), and
+//the other method was to use a method to set the ref which avoided the inline ref function updating often. I
 //then converted the AddForm component to a functional component and found that the setRef method wasn't working
 //as it did when the component was a class component so I instead reverted to using React.createRef() instead
 //of a setRef method. Maybe a class component would be best in this case. If so, why?
