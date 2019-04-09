@@ -27,12 +27,12 @@ class Tracker extends React.Component {
       return {people: prevState.people.filter((_, i) => i !== index)}
     })
   }
-  handleSubmit = (name, relationship) => {
+  handleSubmit = (person) => {
     const {people} = this.state;
     this.setState ({
       name: '',
       relationship: '',
-      people : [...people, {name: name, relationship: relationship}]
+      people : [...people, person]
     })
   }
   render() {
@@ -57,7 +57,7 @@ class AddForm extends React.PureComponent {
     event.preventDefault();
     const {nameVal, relationshipVal, handleSubmit} = this.props;
     if (nameVal && relationshipVal) {
-      handleSubmit(nameVal, relationshipVal);
+      handleSubmit({name: nameVal, relationship: relationshipVal});
     }
   }
   render() {
