@@ -4,8 +4,8 @@ import './index.css';
 
 class Tracker extends React.Component {
   state = {
-    nameVal: '',
-    relationshipVal: '',
+    name: '',
+    relationship: '',
     people: [
       {
         name: 'Jess',
@@ -18,15 +18,9 @@ class Tracker extends React.Component {
     ]
   }
   updateInput = (event) => {
-    if (event.target.name === 'name') {
-      this.setState ({
-        nameVal: event.target.value
-      })
-    } else {
-      this.setState ({
-        relationshipVal: event.target.value
-      })
-    }
+    this.setState ({
+      [event.target.name]: event.target.value
+    })
   }
   handleDelete = (index) => {
     this.setState (prevState => {
@@ -34,23 +28,25 @@ class Tracker extends React.Component {
     })
   }
   handleSubmit = (name, relationship) => {
+    const {people} = this.state;
     this.setState ({
-      nameVal: '',
-      relationshipVal: '',
-      people : [...this.state.people, {name: name, relationship: relationship}]
+      name: '',
+      relationship: '',
+      people : [...people, {name: name, relationship: relationship}]
     })
   }
   render() {
+    const {name, relationship, people} = this.state;
     return (
       <div>
         <h1 className='margin-bottom'>Person Tracker</h1>
         <AddForm
           handleSubmit={this.handleSubmit}
-          nameVal={this.state.nameVal}
-          relationshipVal={this.state.relationshipVal}
+          nameVal={name}
+          relationshipVal={relationship}
           updateInput={this.updateInput}/>
         <h2 className={'margin-bottom'}>Persons:</h2>
-        <Persons people={this.state.people} handleDelete={this.handleDelete}/>
+        <People people={people} handleDelete={this.handleDelete}/>
       </div>
     )
   }
@@ -59,19 +55,21 @@ class Tracker extends React.Component {
 class AddForm extends React.PureComponent {
   handleSubmit = (event) => {
     event.preventDefault();
-    if (this.props.nameVal && this.props.relationshipVal) {
-      this.props.handleSubmit(this.props.nameVal, this.props.relationshipVal);
+    const {nameVal, relationshipVal, handleSubmit} = this.props;
+    if (nameVal && relationshipVal) {
+      handleSubmit(nameVal, relationshipVal);
     }
   }
   render() {
+    const {nameVal, relationshipVal, updateInput} = this.props;
     return (
       <form className='margin-bottom' onSubmit={this.handleSubmit}>
         <fieldset>
           <legend><h2 className={'margin-bottom'}>Add New Person</h2></legend>
           <legend>Name</legend>
-          <input type='text' name='name' value={this.props.nameVal} onChange={this.props.updateInput}></input>
+          <input type='text' name='name' value={nameVal} onChange={updateInput}></input>
           <legend>Relationship</legend>
-          <input className={'margin-bottom'} type='text' name='relationship' value={this.props.relationshipVal} onChange={this.props.updateInput}></input>
+          <input className={'margin-bottom'} type='text' name='relationship' value={relationshipVal} onChange={updateInput}></input>
           <input className='display-block' type='submit' value='Submit'></input>
         </fieldset>
       </form>
@@ -79,9 +77,9 @@ class AddForm extends React.PureComponent {
   }
 }
 
-class Persons extends React.PureComponent {
+class People extends React.PureComponent {
   render() {
-    const people = this.props.people;
+    const {people, handleDelete} = this.props;
     const peopleRenders = people.map((p, i) => {
       return (
       <Person
@@ -89,7 +87,7 @@ class Persons extends React.PureComponent {
         index={i}
         name={p.name}
         relationship={p.relationship}
-        handleDelete={this.props.handleDelete}/>
+        handleDelete={handleDelete}/>
       )
     })
   return (
@@ -111,14 +109,15 @@ class Persons extends React.PureComponent {
 
 class Person extends React.PureComponent {
   handleClick = () => {
-    this.props.handleDelete(this.props.index);
+    const {handleDelete, index} = this.props;
+    handleDelete(index);
   }
   render () {
-    console.log(this.props.name + ' just rendered')
+    const {name, relationship} = this.props;
     return (
       <tr>
-        <td>{this.props.name}</td>
-        <td>{this.props.relationship}</td>
+        <td>{name}</td>
+        <td>{relationship}</td>
         <td><button onClick={this.handleClick}>Delete</button></td>
       </tr>
     )
@@ -126,12 +125,12 @@ class Person extends React.PureComponent {
 }
 
 
-
-
 ReactDOM.render(
   <Tracker />,
   document.getElementById('root')
 );
+
+//COMPARE WITH TUTORIAL AND WRAP UP
 
 //CONTINUE COMPARING AND REFINING: I most recently converted the AddForm compopnent from a controlled
 //component using state to an uncontrolled component using refs to access the value of the input
@@ -148,8 +147,17 @@ ReactDOM.render(
 //as it did when the component was a class component so I instead reverted to using React.createRef() instead
 //of a setRef method. Maybe a class component would be best in this case. If so, why?
 
-//POSSIBLE ADDITIONS: STOP EACH PERSON COMPONNET FROM RERENDERING, ADD ERRORS FOR EMPTY FIELDS, DONT ALLOW
-//DUPLICATE NAMES
+//After more research, I found that I could use the event object to access input elements using vanilla DOM
+//API methods (event.target[0].children[2]) and eliminate the need for using refs. Then I found that while this
+//method would work for my limited functionality it would be restrictive. Furthermore it would not be the 'React
+//way' in that it would be manipulating the DOM directly instead of through React. I then reverted the AddForm
+//componnet to a controlled component by adding state to the Tracker component as opposed to re-adding state to
+//the AddForm component. While this involved passing more props it also allows for more functionality and doesn't
+//directly manipulate the DOM. Lastly I converted the functional components to PureComponents which prevented
+//seeminigly unnecessary renders.
+
+//POSSIBLE ADDITIONS: ADD ERRORS FOR EMPTY FIELDS, DONT ALLOW DUPLICATE NAMES
+
 
 /*
 class AddForm extends React.Component {
