@@ -57,7 +57,10 @@ class AddForm extends React.PureComponent {
     event.preventDefault();
     const {nameVal, relationshipVal, handleSubmit} = this.props;
     if (nameVal && relationshipVal) {
-      handleSubmit({name: nameVal, relationship: relationshipVal});
+      handleSubmit({
+        name: nameVal,
+        relationship: relationshipVal,
+      });
     }
   }
   render() {
@@ -67,10 +70,21 @@ class AddForm extends React.PureComponent {
         <fieldset>
           <legend><h2 className={'margin-bottom'}>Add New Person</h2></legend>
           <legend>Name</legend>
-          <input type='text' name='name' value={nameVal} onChange={updateInput}></input>
+          <input
+            type='text'
+            name='name'
+            value={nameVal}
+            onChange={updateInput}></input>
           <legend>Relationship</legend>
-          <input className={'margin-bottom'} type='text' name='relationship' value={relationshipVal} onChange={updateInput}></input>
-          <input className='display-block' type='submit' value='Submit'></input>
+          <input
+            className={'margin-bottom'}
+            type='text'
+            name='relationship'
+            value={relationshipVal}
+            onChange={updateInput}></input>
+          <button
+            className='display-block'
+            type='submit'>Submit</button>
         </fieldset>
       </form>
     )
