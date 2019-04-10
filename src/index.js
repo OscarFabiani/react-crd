@@ -144,7 +144,7 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-//COMPARE WITH TUTORIAL AND WRAP UP
+//REORGANIZE COMPONENTS INTO SEPERATE FILES AND ADD STYLING
 
 //CONTINUE COMPARING AND REFINING: I most recently converted the AddForm compopnent from a controlled
 //component using state to an uncontrolled component using refs to access the value of the input
@@ -173,7 +173,10 @@ ReactDOM.render(
 //POSSIBLE ADDITIONS: ADD ERRORS FOR EMPTY FIELDS, DONT ALLOW DUPLICATE NAMES
 
 
+
 /*
+//Using Refs
+
 class AddForm extends React.Component {
   //This method is to avoid setting refs as inline methods as they are updated twice seemingly on each change.
   //Using this, it seems that this is only called once.
@@ -206,9 +209,10 @@ class AddForm extends React.Component {
     )
   }
 }
-*/
 
-/*
+
+//Using React.createRef()
+
 const AddForm = props => {
   let input1 = React.createRef();
   let input2 = React.createRef();
@@ -237,6 +241,7 @@ const AddForm = props => {
   )
 }
 
+//Using direct DOM manipulation
 const AddForm = props => {
   const handleSubmit = (event) => {
     event.preventDefault();
